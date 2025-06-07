@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+*.log
+*.sqlite
+*.db
+.prisma
+coverage
+*.local
+docker-data/
+documentacao/
