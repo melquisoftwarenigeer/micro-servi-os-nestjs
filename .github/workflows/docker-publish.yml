@@ -2,6 +2,9 @@ name: Docker Publish
 
 on:
   push:
+    branches:
+      - main
+      - develop
     tags:
       - 'v*'
       - 'V*'
@@ -44,7 +47,7 @@ jobs:
           context: ./auth
           file: ./auth/Dockerfile
           push: true
-          tags: melquidocker/micro-servico1:auth-${{ steps.extract_version.outputs.TAG_NAME }}
+          tags: melquidocker/micro-servico-nest:auth-${{ steps.extract_version.outputs.TAG_NAME }}
 
       - name: Build and push Projects image
         uses: docker/build-push-action@v5
@@ -52,4 +55,4 @@ jobs:
           context: ./projects
           file: ./projects/Dockerfile
           push: true
-          tags: melquidocker/micro-servico1:projects-${{ steps.extract_version.outputs.TAG_NAME }}
+          tags: melquidocker/micro-servico-nest:projects-${{ steps.extract_version.outputs.TAG_NAME }}
