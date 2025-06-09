@@ -3,11 +3,16 @@ FROM node:18
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
 
-RUN npm run build
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
-CMD ["node", "dist/main"]
+# Adiciona as migrações ao container
+COPY prisma ./prisma
+
+RUN npx prisma generate
+
+CMD ["./entrypoint.sh"]

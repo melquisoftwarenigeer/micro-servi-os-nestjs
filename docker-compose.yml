@@ -1,25 +1,32 @@
+version: '3.8'
+
 services:
+  # Serviço de autenticação (Auth API)
   auth:
-    build: ./auth
+    image: melquidocker/micro-servico-nest:auth-v1.1.0
     ports:
-      - '3001:3000'
+      - '3001:3000'  # Porta externa:interna (ex: localhost:3001)
     depends_on:
-      - auth-db
+      - auth-db  # Aguarda o banco ficar disponível antes de subir
     environment:
       - DATABASE_URL=postgres://postgres:postgres@auth-db:5432/auth_db
 
+  # Banco de dados para o serviço de autenticação
   auth-db:
     image: postgres:15
-    restart: always
+    restart: always  # Reinicia automaticamente se falhar
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auth_db
     ports:
-      - '5433:5432' # porta externa para inspecionar
+      - '5433:5432'  # Porta externa para acessar o banco localmente
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data  # Persistência dos dados
 
+  # Serviço de gerenciamento de projetos
   projects:
-    build: ./projects
+    image: melquidocker/micro-servico-nest:projects-v1.1.0
     ports:
       - '3002:3000'
     depends_on:
@@ -27,6 +34,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@projects-db:5432/projects_db
 
+  # Banco de dados para o serviço de projetos
   projects-db:
     image: postgres:15
     restart: always
@@ -36,3 +44,10 @@ services:
       POSTGRES_DB: projects_db
     ports:
       - '5434:5432'
+    volumes:
+      - projects-db-data:/var/lib/postgresql/data
+
+# Volumes nomeados para persistir dados do banco mesmo após reiniciar ou remover containers
+volumes:
+  auth-db-data:
+  projects-db-data:
