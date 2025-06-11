@@ -9,3 +9,15 @@ coverage
 *.local
 docker-data/
 documentacao/
+
+# Docker
+auth/Dockerfile.dev
+projects/Dockerfile.dev
+*.log
+docker-compose.override.yml
+docker-compose.example
+
+# IDEs
+.vscode/
+.idea/
+*.swp
