@@ -1,8 +1,9 @@
 services:
   # Serviço de autenticação (Auth API)
   auth:
-    build: ./auth
-    # image: melquidocker/micro-servico-nest:auth-v1.2.0
+    # build: ./auth
+    image: melquidocker/micro-servico-nest:auth-v1.2.1
+    container_name: auth-service
     ports:
       - '3001:3000'  # Porta externa:interna (ex: localhost:3001)
     depends_on:
@@ -25,12 +26,14 @@ services:
 
   # Serviço de gerenciamento de projetos
   projects:
-    build: ./projects
-    # image: melquidocker/micro-servico-nest:projects-v1.2.0
+    # build: ./projects
+    image: melquidocker/micro-servico-nest:projects-v1.2.1
+    container_name: projects-service
     ports:
       - '3002:3000'
     depends_on:
       - projects-db
+      - auth-service
     environment:
       - DATABASE_URL=${PROJECTS_DATABASE_URL}
 
@@ -39,9 +42,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: ${AUTH_DB_USER}
-      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
-      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: ${PROJECTS_DB_USER} 
+      POSTGRES_PASSWORD: ${PROJECTS_DB_PASSWORD}
+      POSTGRES_DB: ${PROJECTS_DB_NAME}
     ports:
       - '5434:5432'
     volumes:
