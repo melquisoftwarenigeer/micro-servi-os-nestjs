@@ -14,10 +14,10 @@ export class ProjectsController {
 
   @Get('projec-jwt')
   async getProjects(@Headers('authorization') authHeader: string) {
+    const AUTH_URL = process.env.AUTH_URL || 'http://localhost:3001';
     try {
       const response = await lastValueFrom(
-        this.http.post('http://auth-service:3001/auth/verify', {}, { //comdocker
-          // this.http.post('http://localhost:3001/auth/verify', {}, { //sem docker
+        this.http.post(`${AUTH_URL}/auth/verify`, {}, { //comdocker
           headers: { Authorization: authHeader },
         })
       );
