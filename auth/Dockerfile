@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -7,12 +7,10 @@ RUN npm install
 
 COPY . .
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
-
-# Adiciona as migrações ao container
-COPY prisma ./prisma
-
+# Gere os arquivos do Prisma
 RUN npx prisma generate
 
-CMD ["./entrypoint.sh"]
+# Compile o projeto
+RUN npm run build
+
+CMD ["node", "dist/main"]
