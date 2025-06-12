@@ -2,7 +2,7 @@ services:
   # Serviço de autenticação (Auth API)
   auth:
     # build: ./auth
-    image: melquidocker/micro-servico-nest:auth-v1.2.1
+    image: melquidocker/micro-servico-nest:auth-v1.3.0
     container_name: auth-service
     ports:
       - '3001:3000'  # Porta externa:interna (ex: localhost:3001)
@@ -10,6 +10,7 @@ services:
       - auth-db  # Aguarda o banco ficar disponível antes de subir
     environment:
       - DATABASE_URL=${AUTH_DATABASE_URL}
+      - AUTH_PORT=3000
 
   # Banco de dados para o serviço de autenticação
   auth-db:
@@ -27,15 +28,17 @@ services:
   # Serviço de gerenciamento de projetos
   projects:
     # build: ./projects
-    image: melquidocker/micro-servico-nest:projects-v1.2.1
+    image: melquidocker/micro-servico-nest:projects-v1.3.0
     container_name: projects-service
     ports:
       - '3002:3000'
     depends_on:
       - projects-db
-      - auth-service
+      - auth
     environment:
       - DATABASE_URL=${PROJECTS_DATABASE_URL}
+      - AUTH_URL=http://auth:3000  # 👈 Adiciona essa linha!
+      - PROJECTS_PORT=3000
 
   # Banco de dados para o serviço de projetos
   projects-db:
