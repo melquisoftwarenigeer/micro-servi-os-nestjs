@@ -2,7 +2,7 @@ services:
   # Serviço de autenticação (Auth API)
   auth:
     # build: ./auth
-    image: melquidocker/micro-servico-nest:auth-v1.3.0
+    image: melquidocker/micro-servico-nest:auth-v1.3.1
     container_name: auth-service
     ports:
       - '3001:3000'  # Porta externa:interna (ex: localhost:3001)
@@ -28,7 +28,7 @@ services:
   # Serviço de gerenciamento de projetos
   projects:
     # build: ./projects
-    image: melquidocker/micro-servico-nest:projects-v1.3.0
+    image: melquidocker/micro-servico-nest:projects-v1.3.1
     container_name: projects-service
     ports:
       - '3002:3000'
