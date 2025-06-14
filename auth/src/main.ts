@@ -7,6 +7,11 @@ async function bootstrap() {
   const isDocker = fs.existsSync('/.dockerenv');
   const AUTH_PORT = isDocker ? (process.env.AUTH_PORT || 3000) : 3001;
   const app = await NestFactory.create(AppModule);
+  // Habilita CORS para qualquer origem
+  app.enableCors({
+    origin: '*', // ou defina ['http://localhost:8080'] para maior segurança
+    credentials: true
+  });
   app.useGlobalPipes(new ValidationPipe());  // Aplica o ValidationPipe globalmente
   await app.listen(AUTH_PORT);
 }

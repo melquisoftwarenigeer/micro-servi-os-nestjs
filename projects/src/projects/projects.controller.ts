@@ -17,13 +17,19 @@ export class ProjectsController {
     const AUTH_URL = process.env.AUTH_URL || 'http://localhost:3001';
     try {
       const response = await lastValueFrom(
-        this.http.post(`${AUTH_URL}/auth/verify`, {}, { //comdocker
+        this.http.post(`${AUTH_URL}/auth/verify`, {}, {
           headers: { Authorization: authHeader },
         })
       );
 
       if (response.data.valid) {
-        return [{ id: 1, name: 'Projeto XPTO', owner: response.data.userId }];
+        const projetos = await this.projectsService.findAll(); // Aqui está o ajuste
+        return [{
+          id: 1,
+          name: 'Projeto XPTO',
+          owner: response.data.userId,
+          projetos: projetos // opcionalmente pluralizar o nome
+        }];
       }
 
       throw new UnauthorizedException('Token inválido');
