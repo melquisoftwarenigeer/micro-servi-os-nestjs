@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: '*', // ou defina ['http://localhost:8080'] para maior segurança
     credentials: true
   });
-  // app.useGlobalPipes(new ValidationPipe());  // Aplica o ValidationPipe globalmente
+  app.useGlobalPipes(new ValidationPipe());  // Aplica o ValidationPipe globalmente
   await app.listen(PROJECTS_PORT);
 }
 bootstrap();

@@ -2,10 +2,14 @@ import { Controller, Get, Post, Body, Headers, UnauthorizedException } from '@ne
 import { ProjectsService } from './projects.service';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { CreateProjectDto } from './dto/project.dto';
 
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService, private readonly http: HttpService) { }
+  constructor(
+    private readonly projectsService: ProjectsService,
+    private readonly http: HttpService,
+  ) { }
 
   @Get()
   getAll() {
@@ -39,7 +43,7 @@ export class ProjectsController {
   }
 
   @Post()
-  create(@Body() body: { name: string; ownerId: string }) {
-    return this.projectsService.create(body);
+  create(@Body() createProjectDto: CreateProjectDto) {
+    return this.projectsService.create(createProjectDto);
   }
 }
