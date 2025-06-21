@@ -1,8 +1,8 @@
 services:
-  # Serviço de autenticação e Gateway de entrada
+  # Serviço de autenticação
   auth:
-    image: melquidocker/micro-servico-nest:gateway-v1.4.0
-    container_name: api-gateway
+    image: melquidocker/micro-servico-nest:auth-v1.4.0
+    container_name: auth-service
     ports:
       - '3001:3000'
     depends_on:
