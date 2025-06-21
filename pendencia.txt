@@ -1,0 +1,3 @@
+Ver o validador pipe nos serviços
+Configurar o Cors
+automatiza INTERNAL_JWT_SECRET nos .env

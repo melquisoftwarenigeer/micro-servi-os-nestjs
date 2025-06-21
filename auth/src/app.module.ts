@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ProjectsGatewayController } from './routeGateway/projects/ProjectsGateway.controller';
+import { TasksGatewayController } from './routeGateway/task/TasksGateway.controller';
+import { HttpModule } from '@nestjs/axios';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
+import { AppController } from './app.controller';
+import { TokenModule } from './token/token.module'; // 👈
 
 @Module({
-  imports: [AuthModule, UserModule],
-  controllers: [AppController],
+  imports: [HttpModule, AuthModule, TokenModule],
+  controllers: [ProjectsGatewayController, TasksGatewayController, AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
