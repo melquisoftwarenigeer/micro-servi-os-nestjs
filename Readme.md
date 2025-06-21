@@ -15,3 +15,7 @@ docker-compose up -d
 | projects    | `3002`        | `3000`        |
 | auth-db     | `5433`        | `5432`        |
 | projects-db | `5434`        | `5432`        |
+
+Gerar chave token
+cd /auth
+npx ts-node src/token/script/set-internal-token.ts
