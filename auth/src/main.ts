@@ -12,6 +12,7 @@ async function bootstrap() {
     origin: '*', // ou defina ['http://localhost:8080'] para maior segurança
     credentials: true
   });
+  console.log('🧪 INTERNAL_JWT_SECRET_AUTH:', process.env.INTERNAL_JWT_SECRET);
   app.useGlobalPipes(new ValidationPipe());  // Aplica o ValidationPipe globalmente
   await app.listen(AUTH_PORT);
 }

@@ -1,5 +1,29 @@
 {
   "dependencies": {
     "jsonwebtoken": "^9.0.2"
-  }
+  },
+  "name": "micro-servi-os-nestjs",
+  "version": "1.0.0",
+  "description": "Este repositório contém uma arquitetura de micro serviços desenvolvida em NestJS, com foco no serviço de autenticação (`auth`) e serviços auxiliares (`projects` e `tasks`). A comunicação interna é protegida por tokens JWT gerados dinamicamente para segurança.",
+  "main": "index.js",
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:secret": "ts-node generate-shared-secret.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melquisoftwarenigeer/micro-servi-os-nestjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/melquisoftwarenigeer/micro-servi-os-nestjs/issues"
+  },
+  "homepage": "https://github.com/melquisoftwarenigeer/micro-servi-os-nestjs#readme"
 }

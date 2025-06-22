@@ -18,7 +18,8 @@ async function bootstrap() {
   
   // Bloqueia qualquer requisição sem token (curl, Postman, navegador, etc.)
   // app.use(new InternalAuthMiddleware().use);
-  
+  console.log('🧪 INTERNAL_JWT_SECRET_PROJECTS:', process.env.INTERNAL_JWT_SECRET);
+
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(PROJECTS_PORT);
