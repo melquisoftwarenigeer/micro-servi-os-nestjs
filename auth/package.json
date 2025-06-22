@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-     "generate:secret": "node /src/token/generate-secret.js"
+    "generate:secret": "node /src/token/generate-secret.js",
+    "set-internal-token": "ts-node src/token/script/set-internal-token.ts"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
@@ -63,7 +64,7 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.20.0"
   },
   "jest": {

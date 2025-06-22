@@ -15,7 +15,12 @@ export class InternalJwtGuard implements CanActivate {
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = jwt.verify(token, process.env.INTERNAL_JWT_SECRET);
+      const secret = process.env.INTERNAL_JWT_SECRET;
+      if (!secret) {
+        throw new Error('Missing INTERNAL_JWT_SECRET');
+      }
+      // const decoded = jwt.verify(token, secret);
+      const decoded = jwt.verify(token, secret) as jwt.JwtPayload;
       if (decoded.iss !== 'gateway') {
         throw new UnauthorizedException('Token inválido: origem incorreta');
       }
