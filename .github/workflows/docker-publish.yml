@@ -73,7 +73,7 @@ jobs:
       - name: Build and push Tasks image
         uses: docker/build-push-action@v5
         with:
-          context: ./tasks-service
-          file: ./tasks-service/Dockerfile
+          context: ./task-service
+          file: ./task-service/Dockerfile
           push: true
-          tags: melquidocker/micro-servico-nest:tasks-${{ steps.extract_version.outputs.TAG_NAME }}
+          tags: melquidocker/micro-servico-nest:task-${{ steps.extract_version.outputs.TAG_NAME }}
