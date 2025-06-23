@@ -1,7 +1,6 @@
 node_modules
 dist
 .env
-.env.shared
 *.log
 *.sqlite
 *.db
@@ -10,6 +9,7 @@ coverage
 *.local
 docker-data/
 documentacao/
+.github/workflows/example_script.flow
 
 # Docker
 auth/Dockerfile.dev
@@ -17,6 +17,7 @@ projects/Dockerfile.dev
 *.log
 docker-compose.override.yml
 docker-compose.example
+.env.shared
 
 # IDEs
 .vscode/
