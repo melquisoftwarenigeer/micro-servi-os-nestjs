@@ -20,19 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies for auth
-        working-directory: ./auth
-        run: npm install
-
-      - name: Generate INTERNAL_JWT_SECRET in .env files
-        working-directory: ./auth
-        run: npm run set-internal-token
-
       - name: Extract Tag Version
         id: extract_version
         run: |
