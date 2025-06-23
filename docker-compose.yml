@@ -1,10 +1,6 @@
-# env_file:
-#   - .env.shared
-
 services:
-  # Serviço de autenticação
   auth:
-    image: melquidocker/micro-servico-nest:auth-v1.5.2
+    image: melquidocker/micro-servico-nest:auth-v1.6.0
     container_name: auth-service
     ports:
       - '3001:3000'
@@ -12,10 +8,14 @@ services:
       - auth-db
       - projects
       - tasks
+    env_file:
+      - .env.shared
     environment:
       - DATABASE_URL=${AUTH_DATABASE_URL}
       - PROJECTS_URL=http://projects:3000
+      - SERVICE_PROJECTS=http://projects:3000/projects
       - TASKS_URL=http://tasks:3000
+      - SERVICE_TASK=http://tasks:3000/tasks
       - AUTH_PORT=3000
 
   auth-db:
@@ -30,14 +30,15 @@ services:
     volumes:
       - auth-db-data:/var/lib/postgresql/data
 
-  # Serviço de projetos
   projects:
-    image: melquidocker/micro-servico-nest:projects-v1.5.2
+    image: melquidocker/micro-servico-nest:projects-v1.6.0
     container_name: projects-service
     ports:
       - '3002:3000'
     depends_on:
       - projects-db
+    env_file:
+      - .env.shared
     environment:
       - DATABASE_URL=${PROJECTS_DATABASE_URL}
       - AUTH_URL=http://auth:3000
@@ -55,14 +56,15 @@ services:
     volumes:
       - projects-db-data:/var/lib/postgresql/data
 
-  # Serviço de tarefas
   tasks:
-    image: melquidocker/micro-servico-nest:task-v1.5.2
+    image: melquidocker/micro-servico-nest:task-v1.6.0
     container_name: tasks-service
     ports:
       - '3003:3000'
     depends_on:
       - projects-db
+    env_file:
+      - .env.shared
     environment:
       - DATABASE_URL=${TASKS_DATABASE_URL}
       - AUTH_URL=http://auth:3000
