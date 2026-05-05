@@ -1,103 +1,169 @@
-# Micro Serviço NestJS - Auth
+# Micro Serviços NestJS
 
-## Descrição
+## Visão geral
 
-Este repositório contém uma arquitetura de micro serviços desenvolvida em NestJS, com foco no serviço de autenticação (`auth`) e serviços auxiliares (`projects` e `tasks`). A comunicação interna é protegida por tokens JWT gerados dinamicamente para segurança.
+Este repositório contém uma arquitetura de micro serviços em NestJS com três aplicações independentes:
 
----
+- `auth/` — serviço de autenticação e autorização
+- `projects-service/` — serviço de projetos
+- `task-service/` — serviço de tarefas
 
-## Rodar localmente
+Cada serviço é uma aplicação NestJS separada e utiliza banco de dados Postgres.
 
-Clone o repositório e inicie os serviços com Docker Compose:
+O `docker-compose.yml` orquestra todos os serviços e seus bancos de dados.
+
+## Por que NestJS?
+
+NestJS é um framework Node.js que traz organização por módulos, controllers e providers usando decorators. Ele facilita o desenvolvimento de APIs escaláveis e mantém o fluxo parecido com arquiteturas mais tradicionais, mas em JavaScript/TypeScript.
+
+Aqui estão alguns conceitos que aparecem neste projeto:
+
+- `@Module()` — agrupa controllers e providers
+- `@Controller()` — define rotas HTTP
+- `@Injectable()` — define serviços injetáveis
+- `@nestjs/jwt` / JWT — usado para autenticação e comunicação interna entre serviços
+- `Prisma` / `TypeORM` — ORM para acesso ao banco
+
+## Como rodar o projeto (passo a passo)
+
+### 1) Pré-requisitos
+
+- Node.js 20+ instalado
+- Docker e Docker Compose instalados
+- Git para clonar o repositório
+
+### 2) Clonar o repositório
 
 ```bash
-git clone https://github.com/sua-org/micro-servico-nest-deploy.git
-cd micro-servico-nest-deploy
+git clone https://github.com/melquisoftwarenigeer/micro-servi-os-nestjs.git
+cd micro-servi-os-nestjs
+```
 
+### 3) Instalar dependências na raiz
 
-📦 Serviços e Portas
+```bash
+npm install
+```
 
-| Serviço     | Porta externa | Porta interna |
-| ----------- | ------------- | ------------- |
-| auth        | `3001`        | `3000`        |
-| projects    | `3002`        | `3000`        |
-| task        | `3003`        | `3000`        |
-| auth-db     | `5433`        | `5432`        |
-| projects-db | `5434`        | `5432`        |
-| task-db     | `5435`        | `5432`        |
+### 4) Configurar variáveis de ambiente
 
-Gerar chave token interna (INTERNAL_JWT_SECRET)
+Copie o exemplo para um arquivo real de ambiente:
 
-Para garantir a segurança na comunicação entre os micro serviços, é necessário gerar a chave secreta compartilhada para os tokens internos. Para isso:
+Windows:
+```powershell
+copy .env.example .env
+```
 
-Modo Dev
-    Acesse o diretório auth:
+Linux / macOS:
+```bash
+cp .env.example .env
+```
 
-Execute o script para gerar e propagar o token interno:
-    cd auth
-    npx ts-node src/token/script/set-internal-token.ts
+Depois, preencha os valores necessários dentro de `.env`.
 
-Modo docker
-    Acesse a Raiz do projeto:
+#### Exemplo mínimo de `.env`
 
-Execute o script para gerar e propagar o token interno:
-    npm run generate:secret
+```env
+AUTH_DB_USER=postgres
+AUTH_DB_PASSWORD=123456
+AUTH_DB_NAME=auth_db
+AUTH_DB_PORT=5433
+PROJECTS_DB_USER=postgres
+PROJECTS_DB_PASSWORD=123456
+PROJECTS_DB_NAME=projects_db
+PROJECTS_DB_PORT=5434
+TASKS_DB_USER=postgres
+TASKS_DB_PASSWORD=123456
+TASKS_DB_NAME=tasks_db
+TASKS_DB_PORT=5435
+AUTH_DATABASE_URL=postgresql://postgres:123456@auth-db:5432/auth_db
+PROJECTS_DATABASE_URL=postgresql://postgres:123456@projects-db:5432/projects_db
+TASKS_DATABASE_URL=postgresql://postgres:123456@tasks-db:5432/tasks_db
+```
 
-Este script atualiza o arquivo .env em todos os serviços (auth, projects-service e tasks-service) com a variável INTERNAL_JWT_SECRET.
+> Observação: o arquivo `.env` na raiz é usado pelo Docker Compose para substituir variáveis no `docker-compose.yml`.
 
-Estrutura dos diretórios
+### 5) Gerar o segredo interno compartilhado
 
-├── docker-compose.yml
-├── auth/
-│   ├── Dockerfile
-│   ├── src/
-│   ├── package.json
-├── projects-service/
-│   ├── Dockerfile
-│   ├── src/
-│   ├── package.json
-├── tasks-service/
-│   ├── Dockerfile
-│   ├── src/
-│   ├── package.json
+O projeto usa um token JWT interno (`INTERNAL_JWT_SECRET`) para autorizar a comunicação entre os micro serviços.
 
-Build e deploy
+```bash
+npm run generate:secret
+```
 
-Utilize o workflow do GitHub Actions para buildar e publicar as imagens Docker automaticamente em pushes para branches principais ou tags.
+Esse comando gera o arquivo `.env.shared` na raiz com o segredo interno.
 
-O workflow realiza as seguintes ações:
+### 6) Subir os serviços com Docker Compose
 
-    Gera o token INTERNAL_JWT_SECRET
+```bash
+docker compose up -d
+```
 
-    Builda as imagens Docker para auth, projects-service e tasks-service
+Se o seu Docker ainda usar o comando clássico, também funciona:
 
-    Publica as imagens no Docker Hub com tags baseadas na versão
-
-Variáveis de ambiente importantes
-Variável	Descrição	Onde configurar
-INTERNAL_JWT_SECRET	Chave secreta para validação dos tokens internos	No .env de cada serviço
-DATABASE_URL	URL de conexão com o banco de dados	No .env de cada serviço
-PORT	Porta que o serviço irá escutar	No .env (padrão é 3000)
-Executar localmente com Docker Compose
-
-O arquivo docker-compose.yml já está configurado para orquestrar todos os serviços e bancos de dados necessários para rodar a aplicação localmente.
-
-Exemplo para subir tudo:
-
+```bash
 docker-compose up -d
+```
 
-Acesse cada serviço via localhost nas portas externas especificadas acima.
-Contribuição
+### 7) Verificar se os serviços subiram
 
-Contribuições são bem-vindas! Para contribuir:
+```bash
+docker compose ps
+```
 
-    Faça um fork do repositório
+### 8) Endpoints disponíveis
 
-    Crie uma branch com a sua feature ou correção (git checkout -b minha-feature)
+- Auth: `http://localhost:3001`
+- Projects: `http://localhost:3002`
+- Tasks: `http://localhost:3003`
 
-    Faça commit das suas alterações (git commit -m "Minha feature")
+## Rodar em modo de desenvolvimento sem Docker
 
-    Envie para seu fork (git push origin minha-feature)
+Se você quiser rodar a partir do código fonte local:
 
-    Abra um Pull Request neste repositório
+1. Entre na pasta do serviço que deseja executar.
 
+```bash
+cd auth
+npm install
+npm run start:dev
+```
+
+Para `projects-service` e `task-service`, o fluxo é o mesmo:
+
+```bash
+cd projects-service
+npm install
+npm run start:dev
+```
+
+```bash
+cd task-service
+npm install
+npm run start:dev
+```
+
+2. Garanta que o arquivo `.env.shared` exista na raiz ou que a variável `INTERNAL_JWT_SECRET` esteja disponível no ambiente.
+3. Ajuste também `DATABASE_URL` e demais variáveis de ambiente necessárias antes de iniciar o serviço.
+
+## Estrutura de diretórios
+
+```
+.
+├── auth/
+├── projects-service/
+├── task-service/
+├── docker-compose.yml
+├── .env.example
+├── generate-shared-secret.ts
+```
+
+## Observações importantes
+
+- `auth`, `projects-service` e `task-service` são aplicações NestJS separadas.
+- `docker-compose.yml` usa imagens Docker pré-construídas para os serviços.
+- O segredo interno é criado apenas uma vez e precisa estar disponível para todos os serviços.
+
+## Próximo passo
+
+Se quiser, posso agora ajudar a testar o `docker compose up -d` e ver se o sistema sobe corretamente, ou então explicar como cada serviço NestJS está organizado por módulos e controllers passo a passo.
